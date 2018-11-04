@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_circles ,make_moons
 import random
+from matplotlib import style
+
+style.use('ggplot')
 
 class Kernel_KMEANS(object):
 
@@ -175,6 +178,7 @@ if __name__ == '__main__':
 		plt.xlabel(x_axis)
 		plt.ylabel(y_axis)
 
+	plt.savefig('K_PCA_benchmark.png')
 	plt.show()
 
 

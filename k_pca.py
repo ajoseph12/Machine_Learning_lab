@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import make_circles ,make_moons
 from scipy.spatial.distance import pdist, squareform
 from scipy.linalg import eigh
+import pandas as pd
+from matplotlib import style
+
+style.use('ggplot')
 
 class Kernel_PCA(object):
 
@@ -57,19 +61,16 @@ class Kernel_PCA(object):
 
 		return X_pc
 
-	
+def main():
 
-if __name__ == '__main__':
+	## Benchmark datset - Make moons
 
-	np.random.seed(0)
 	n_samples = 400
-	#X, Y = make_circles(n_samples=400, factor=.3, noise=.05)
 	X, Y = make_moons(n_samples=n_samples, random_state=1)
 	reds = Y == 0
 	blues = Y == 1
 
 	plt.figure(figsize= (10,10))
-
 
 	mode_list = [['polynomial',1, 1, 1, 'Original space - Linear K-PCA', '$X_1$','$X_2$'],
 	['rbf',12, 1, 1, 'Projection by RBF K-PCA', 'Principal Component 1','Principal Component 2'], 
@@ -89,8 +90,46 @@ if __name__ == '__main__':
 		plt.xlabel(x_axis)
 		plt.ylabel(y_axis)
 
+	plt.savefig('K_PCA_benchmark.png')
+	plt.show()
+	
+
+	## NUMERAI datset
+	df = pd.read_csv('dataset/numerai_training_data.csv')
+	df = df[df['era'] == 'era3']
+	X = df.values[:,3:-1]
+	Y = df.values[:,-1]
+	Y=Y.astype('int')
+	reds = Y == 0
+	blues = Y == 1
+	plt.figure(figsize= (15,15))
+	mode_list = [['polynomial',1, 1, 1, 'Original space - Linear K-PCA', '$X_1$','$X_2$'], 
+	['rbf',10, 1, 1, 'Projection by RBF K-PCA', 'Principal Component 1','Principal Component 2'], 
+	['polynomial',7, 5, 1, 'Projection by Polynomial K-PCA', 'Principal Component 1','Principal Component 2'], 
+	['sigmoid',4, 1, 2, 'Projection by Sigmoid K-PCA', 'Principal Component 1','Principal Component 2']]
+
+	for n,i in enumerate(mode_list):
+
+		mode, gamma, degree, r, title, x_axis, y_axis  = i
+		kpca = Kernel_PCA(X, Y, mode, gamma, degree, r)
+		X_pc = kpca.X_pc
+
+		plt.subplot(2, 2, n+1)
+		plt.title(title)
+		plt.scatter(X_pc[reds, 0], X_pc[reds, 1], c="red", s=20)
+		plt.scatter(X_pc[blues, 0], X_pc[blues, 1], c="blue",s=20)
+		plt.text(min(X_pc[:, 0]), max(X_pc[:, 1]),'Gamma = {}, degree = {}, r = {}'.format(gamma, degree, r))
+		plt.xlabel(x_axis)
+		plt.ylabel(y_axis)
+
+	plt.savefig('K_PCA_Numerai.png')
 	plt.show()
 
+if __name__ == '__main__':
+
+	np.random.seed(0)
+
+	main()
 
 
 
