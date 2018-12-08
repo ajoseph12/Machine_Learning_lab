@@ -311,7 +311,7 @@ def main():
 	
 	q_learn = Q_learn(rows, cols, actions, episodes, epsilon, alpha, gamma, iterations, 
 		agent_random_test, nn_layers, dropout, q_learn_type, agent_dispalay, metrics_display, random_envi)
-	accuracy, avg_steps = q_learn.q_testing(test_episodes = 1000, grid_display = False)
+	accuracy, avg_steps = q_learn.q_testing(test_episodes = 1000, grid_display = True)
 
 
 
@@ -333,10 +333,10 @@ if __name__ == '__main__':
 	## Tunable parameters
 	q_learn_type = "Basic" # Basic or Deep
 	random_envi = False  # True or False : True changes environment every episode
-	episodes = 100 # Number of episodes 
+	episodes = 101 # Number of episodes 
 	iterations = 100 # Number of iterations for each episode
-	agent_dispalay = 100 # Frequencey with which agent's movements within enviroment are displayed
-	metrics_display = 100 # Frequence with which the policy and the state-value matrices are displayed
+	agent_dispalay = 50 # Frequencey with which agent's movements within enviroment are displayed
+	metrics_display = 50 # Frequence with which the policy and the state-value matrices are displayed
 	
 
 	main()
